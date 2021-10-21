@@ -7,13 +7,6 @@ using UnityEngine.UI;
 public class ButtonInteracting : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 {
 	[SerializeField] private RectTransform _rectTransform;
-	[SerializeField] private Image _image;
-	[SerializeField] private Color _defaultColor;
-	[SerializeField] private Color _toColor;
-	private float _runningTime;
-	private float _duration = 0.1f;
-
-	private bool _isOnButton = false;
 	private float _x;
 	private float _y;
 	private float _minSize;
@@ -23,23 +16,12 @@ public class ButtonInteracting : MonoBehaviour, IPointerEnterHandler, IPointerEx
 	private IEnumerator _increaseAnimating = null;
 	private IEnumerator _decreaseAnimating = null;
 
-
-
-
-
 	private void Start()
     {
 		_x = _rectTransform.localScale.x;
 		_y = _rectTransform.localScale.y;
 		_minSize = _x;
 	}
-
-	public void ClickOnButton()
-	{
-		var changeColor = IsChangeColor();
-		StartCoroutine(changeColor);
-	}
-
 
 	public void OnPointerEnter(PointerEventData eventData)
 	{
@@ -51,10 +33,8 @@ public class ButtonInteracting : MonoBehaviour, IPointerEnterHandler, IPointerEx
 			_decreaseAnimating = null;
 		}
 
-
 		_increaseAnimating = IsIncrease();
 		StartCoroutine(_increaseAnimating);
-
 	}
 
 	public void OnPointerExit(PointerEventData eventData)
@@ -70,8 +50,6 @@ public class ButtonInteracting : MonoBehaviour, IPointerEnterHandler, IPointerEx
 		_decreaseAnimating = IsDecrease();
 		StartCoroutine(_decreaseAnimating);
 	}
-
-
 
 	private IEnumerator IsIncrease()
     {
@@ -92,32 +70,6 @@ public class ButtonInteracting : MonoBehaviour, IPointerEnterHandler, IPointerEx
 			_y = Mathf.MoveTowards(_y, _minSize, _stepChange);
 			_rectTransform.localScale = new Vector2(_x, _y);
 			yield return new WaitForSeconds(_frequencyAnimation);
-		}
-	}
-
-	private IEnumerator IsChangeColor()
-	{
-		_runningTime = 0;
-
-		while (_runningTime <= _duration)
-		{
-			_runningTime += Time.deltaTime;
-			float normalizeRunningTime = _runningTime / _duration;
-			_image.color = Color.Lerp(_defaultColor, _toColor, normalizeRunningTime);
-
-			yield return new WaitForSeconds(Time.deltaTime);
-
-		}
-
-		_runningTime = 0;
-
-		while (_runningTime <= _duration)
-		{
-			_runningTime += Time.deltaTime;
-			float normalizeRunningTime = _runningTime / _duration;
-			_image.color = Color.Lerp(_toColor, _defaultColor, normalizeRunningTime);
-
-			yield return new WaitForSeconds(Time.deltaTime);
 		}
 	}
 }
