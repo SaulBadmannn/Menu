@@ -7,12 +7,13 @@ using UnityEngine.UI;
 public class ButtonInteracting : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 {
 	[SerializeField] private RectTransform _rectTransform;
+
 	private float _x;
 	private float _y;
 	private float _minSize;
 	private float _maxSize = 1.2f;
 	private float _stepChange = 0.01f;
-	private float _frequencyAnimation = 0.03f;
+	private WaitForSeconds _frequencyAnimation = new WaitForSeconds(0.3f);
 	private IEnumerator _increaseAnimating = null;
 	private IEnumerator _decreaseAnimating = null;
 
@@ -33,7 +34,7 @@ public class ButtonInteracting : MonoBehaviour, IPointerEnterHandler, IPointerEx
 			_decreaseAnimating = null;
 		}
 
-		_increaseAnimating = IsIncrease();
+		_increaseAnimating = Increasing();
 		StartCoroutine(_increaseAnimating);
 	}
 
@@ -47,29 +48,29 @@ public class ButtonInteracting : MonoBehaviour, IPointerEnterHandler, IPointerEx
 			_increaseAnimating = null;
 		}
 
-		_decreaseAnimating = IsDecrease();
+		_decreaseAnimating = Decreasing();
 		StartCoroutine(_decreaseAnimating);
 	}
 
-	private IEnumerator IsIncrease()
+	private IEnumerator Increasing()
     {
 			while (_x < _maxSize && _y < _maxSize)
 			{
 				_x = Mathf.MoveTowards(_x, _maxSize, _stepChange);
 				_y = Mathf.MoveTowards(_y, _maxSize, _stepChange);
 				_rectTransform.localScale = new Vector2(_x, _y);
-				yield return new WaitForSeconds(_frequencyAnimation);
+				yield return _frequencyAnimation;
 			}
 	}
 
-	private IEnumerator IsDecrease()
+	private IEnumerator Decreasing()
     {
 		while (_x > _minSize && _y > _minSize)
 		{
 			_x = Mathf.MoveTowards(_x, _minSize, _stepChange);
 			_y = Mathf.MoveTowards(_y, _minSize, _stepChange);
 			_rectTransform.localScale = new Vector2(_x, _y);
-			yield return new WaitForSeconds(_frequencyAnimation);
+			yield return _frequencyAnimation;
 		}
 	}
 }
